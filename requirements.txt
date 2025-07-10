@@ -1,0 +1,7 @@
+flask==2.3.2
+pyngrok==7.2.0
+ccxt==4.3.0
+pandas==2.2.2
+pandas_ta==0.3.14b0
+python-telegram-bot==13.7
+requests==2.31.0

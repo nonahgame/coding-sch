@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trades History</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Trades History</h1>
+    <table id="trades-table">
+        <thead>
+            <tr>
+                <th>Time</th>
+                <th>Action</th>
+                <th>Price</th>
+                <th>Message</th>
+            </tr>
+        </thead>
+        <tbody id="trades-body">
+            {% for trade in trades %}
+            <tr>
+                <td>{{ trade.time }}</td>
+                <td>{{ trade.action }}</td>
+                <td>{{ trade.price|floatformat:2 }}</td>
+                <td>{{ trade.message }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div id="error-log" class="error"></div>
+
+    <script>
+        async function fetchWithRetry(url) {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                return await response.json();
+            } catch (error) {
+                console.error(`Fetch error for ${url}: ${error}`);
+                document.getElementById('error-log').textContent = `Error: ${error}`;
+                throw error;
+            }
+        }
+
+        async function updateTrades() {
+            try {
+                const trades = await fetchWithRetry('/trades/last');
+                const tbody = document.getElementById('trades-body');
+                tbody.innerHTML = '';
+                trades.forEach(trade => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${trade.time}</td>
+                        <td>${trade.action}</td>
+                        <td>${trade.price.toFixed(2)}</td>
+                        <td>${trade.message}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+                document.getElementById('error-log').textContent = '';
+            } catch (error) {
+                console.error('Trades update error:', error);
+            }
+        }
+
+        window.onload = () => {
+            updateTrades();
+            setInterval(updateTrades, 30000); // Update every 30 seconds
+        };
+    </script>
+</body>
+</html>
