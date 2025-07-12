@@ -30,11 +30,11 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 
 # Environment variables
-BOT_TOKEN = "6342505709:AAGjouzUXln19rHWmO8ipSD4sUA0kEWH1qc"
-CHAT_ID = "672073574"
+BOT_TOKEN = "6342505709:...."
+CHAT_ID = "...."
 SYMBOL = "BTC/USDT"
 TIMEFRAME = "5m"
-NGROK_AUTH_TOKEN = "2wDYhgb8ZkZH3mMukjyqjH327yd_7gPmhpzLiEPGYn6bwtbCY"
+NGROK_AUTH_TOKEN = "..."
 DB_PATH = "td_sto.db"
 
 # Timezone setup
